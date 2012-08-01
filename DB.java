@@ -1,3 +1,12 @@
+/*
+ * La classe funziona che è una bomba...
+ * Ciò che manca sono solo i metodi per le interrogazioni
+ * Feci già una prova per collegare e creare delle tabelle.
+ * Il metodo di creazione poi l'ho cancellato perchè non ci serve
+ * Comunque se vuoi provarlo fate pure. Ricordatevi che vi serve inserire la libreria
+ * che ci ha dato il prof.
+ */
+
 package Database;
 
 import java.sql.Connection;
@@ -5,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import oracle.jdbc.pool.OracleDataSource;
 
+//Classe database
 public class DB
 {
     private final int port = 1521;
