@@ -1,27 +1,28 @@
 package grafica.finestra;
 
-import grafica.Bottone;
-import grafica.ImpostazioniComponente;
-import grafica.finestra.Finestra;
+import entita.Giocatore;
+import grafica.*;
 import java.awt.*;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.*;
 import logica.Controllore;
 
 //Classe finestra nuova partita
 public class FinestraNuovaPartita extends Finestra
 {
-    private JFormattedTextField dataGiorno = new JFormattedTextField();         //Campo data giorno
-    private JFormattedTextField dataMese = new JFormattedTextField();           //Campo data mese
-    private JFormattedTextField dataAnno = new JFormattedTextField();           //Campo data anno
-    private JTextField nomePartita = new JTextField(10);                        //Campo nome partita
+    private JTable elenco = new JTable();                                       //Tabella elenco giocatori scelti
+    private TableModel tabellaElenco;                                           //Modello per la tabella di elenco
+    private ArrayList<Giocatore> elencoGiocatore = new ArrayList<Giocatore>();  //elenco dei giocatori in partita
+    private JTextField nomePartita = new JTextField(15);                        //Campo nome partita
+    private MenuTendina dataGiorno = new MenuTendina(MenuTendina.GIORNO);       //Campo data giorno
+    private MenuTendina dataMese = new MenuTendina(MenuTendina.MESE);           //Campo data mese
+    private MenuTendina dataAnno = new MenuTendina(MenuTendina.ANNO);           //Campo data anno
     
     //Costruttore
     public FinestraNuovaPartita()
     {
-        dataGiorno.setValue("GG");                                              //Inizializza contenuto campo giorno
-        dataMese.setValue("MM");                                                //Inizializza contenuto campo mese
-        dataAnno.setValue("AAAA");                                              //Inizializza contenuto campo anno
         Disegna();                                                              //Richiama metodo di disegno
     }
     
@@ -59,22 +60,33 @@ public class FinestraNuovaPartita extends Finestra
         //Sezione inserimento dati
         ImpostazioniComponente componenteCrea = new ImpostazioniComponente(0, 2, GridBagConstraints.NONE, 0.0, 4, 1); //Crea impostazioni per pannello creazione
         JPanel pannelloCrea = new JPanel(new GridLayout(1, 2, 100, 0));         //Crea pannello sezione crea partita
-        pannelloCrea.setBorder(new EmptyBorder(50, 0, 50, 0));                  //Imposta bordi sezione crea partita      
+        pannelloCrea.setBorder(new EmptyBorder(50, 0, 50, 0));                  //Imposta bordi sezione crea partita
+        
+        //Sezione sinistra della finestra
         JPanel pannelloLista = new JPanel();                                    //Crea pannello lista
         pannelloLista.setLayout(new BoxLayout(pannelloLista, BoxLayout.Y_AXIS)); //Imposta pannello lista
         JPanel pannelloBottoneGiocatori = new JPanel();                         //Crea pannello bottone aggiungi giocatore
         Bottone bottoneGiocatori = new Bottone("Giocatori", "Aggiunge un giocatore alla partita", 100, 25, new Controllore.BottoneGiocatore()); //Crea bottone aggiungi giocatore
         pannelloBottoneGiocatori.add(bottoneGiocatori);                         //Aggiunge il bottone giocatori al pannello lista giocatori
-        JPanel pannelloElenco = new JPanel();                                   //Crea pannello elenco giocatori
-        pannelloElenco.setLayout(new BoxLayout(pannelloElenco, BoxLayout.Y_AXIS)); //Imposta layout verticale per elenco giocatori
+        pannelloLista.add(pannelloBottoneGiocatori);                            //Aggiunge pannello bottone giocatori al pannello lista
+        pannelloLista.add(Box.createRigidArea(new Dimension(0, 25)));           //Crea uno spazio vuoto
+        JPanel pannelloEtichettaElenco = new JPanel();                          //Crea pannello per elenco
         JLabel etichettaLista = new JLabel("Lista Partecipanti:");              //Crea etichetta lista
-        JTextArea areaGiocatori = new JTextArea(6, 10);                         //Crea area giocatori scelti
-        areaGiocatori.setBorder(BorderFactory.createEtchedBorder());            //Imposta bordi per area giocatori
-        pannelloElenco.add(etichettaLista);                                     //Aggiunge etichetta lista al pannello elenco
-        pannelloElenco.add(areaGiocatori);                                      //Aggiunge area lista al pannello elenco
-        pannelloLista.add(pannelloBottoneGiocatori);                            //Aggiunge pannello bottone giocatore al pannello lista
-        pannelloLista.add(Box.createRigidArea(new Dimension(0, 25)));           //Crea uno spazio vuoto nel pannello lista
+        pannelloEtichettaElenco.add(etichettaLista);                            //Aggiunge al pannello elenco l'etichetta
+        pannelloLista.add(pannelloEtichettaElenco);                             //Aggiunge pannello etichetta elenco al pannello lista
+        JPanel pannelloElenco = new JPanel();                                   //Crea panello elenco
+        elenco.setFillsViewportHeight(true);                                    //Imposta la dimensione massima possibile per la tabella 
+        elenco.setTableHeader(null);                                            //Imposta header null per l'elenco
+        elenco.setShowVerticalLines(false);                                     //Nasconde le linee verticali della griglia
+        elenco.setToolTipText("Clicca un nome sull'elenco per rimuoverlo dalla partita"); //Assegna messaggio
+        elenco.addMouseListener(new Controllore.ClickElencoPartecipanti());     //Aggiunge il tipo di evento al click del mouse
+        JScrollPane elencoScroll = new JScrollPane(elenco);                     //Crea barra di scorrimento per elenco
+        elencoScroll.setPreferredSize(new Dimension(125, 100));                 //Imposta la dimensione dell'elenco base
+        pannelloElenco.add(elencoScroll);                                       //Aggiunge elenco al pannello elenco
         pannelloLista.add(pannelloElenco);                                      //Aggiunge pannello elenco al pannello lista
+        pannelloCrea.add(pannelloLista);                                        //Aggiunge pannello lista al pannello crea
+        
+        //Sezione destra della finestra
         JPanel pannelloPartita = new JPanel();                                  //Crea pannello partita
         pannelloPartita.setLayout(new BoxLayout(pannelloPartita, BoxLayout.Y_AXIS)); //Imposta layout verticale al pannello partita
         JPanel pannelloData = new JPanel(new GridBagLayout());                  //Crea pannello data
@@ -96,11 +108,11 @@ public class FinestraNuovaPartita extends Finestra
         pannelloNome.add(nomePartita, componenteCampoNome);                     //Aggiunge il campo nome partita al pannello nome
         pannelloPartita.add(pannelloNome);                                      //Aggiunge pannello nome al pannello partita
         pannelloPartita.add(Box.createRigidArea(new Dimension(0, 25)));         //Crea uno spazio vuoto
+        JPanel pannelloBottoneCrea = new JPanel();                              //Crea pannello per il bottone crea
         Bottone bottoneCrea = new Bottone("Crea Partita", "Inserisce la partita nel database", 125, 25, new Controllore.BottoneCreaPartita()); //Crea il bottone crea partita
-        pannelloPartita.add(bottoneCrea);                                       //Aggiunge bottone crea partita al pannello crea
-        pannelloCrea.add(pannelloLista);                                        //Aggiunge pannello lista al pannello crea
-        pannelloCrea.add(pannelloPartita);                                      //Aggiunge pannello partita al pannello crea
-        
+        pannelloBottoneCrea.add(bottoneCrea);                                   //Aggiunge bottone crea al pannello bottone crea
+        pannelloPartita.add(pannelloBottoneCrea);                               //Aggiunge pannello bottone crea partita al pannello partita
+        pannelloCrea.add(pannelloPartita);                                      //Aggiunge pannello partita al pannello crea        
         contenitore.add(pannelloCrea, componenteCrea);                          //Aggiunge sezione crea partita al contenitore
         
         pack();
@@ -115,23 +127,23 @@ public class FinestraNuovaPartita extends Finestra
     
     //Metodo recupera giorno
     @Override
-    public JTextField getCampoGiorno()
+    public String getCampoGiorno()
     {
-        return dataGiorno;
+        return (String)dataGiorno.getSelectedItem();
     }
     
     //Metodo recupera mese
     @Override
-    public JTextField getCampoMese()
+    public String getCampoMese()
     {
-        return dataMese;
+        return (String)dataMese.getSelectedItem();
     }
     
     //Metodo recupera giorno
     @Override
-    public JTextField getCampoAnno()
+    public String getCampoAnno()
     {
-        return dataAnno;
+        return (String)dataAnno.getSelectedItem();
     }
     
     //Metodo recupera nome partita
@@ -141,6 +153,35 @@ public class FinestraNuovaPartita extends Finestra
         return nomePartita;
     }
 
+    //Metodo recupera lista giocatori
+    @Override
+    public ArrayList<Giocatore> getListaGiocatori()
+    {
+        return elencoGiocatore;
+    }
+    
+    //Metodo recupera tabella elenco
+    @Override
+    public JTable getTabellaPartecipanti()
+    {
+        return elenco;
+    }
+    
+    //Metodo di creazione elenco giocatori scelti
+    @Override
+    public void setElencoGiocatoriScelti()
+    {
+        tabellaElenco = new DefaultTableModel(elencoGiocatore.size(), 2);       //Crea il modello della tabella
+        
+        //Per ogni giocatore nella lista
+        for (int i = 0; i < elencoGiocatore.size(); i++)
+        {
+            tabellaElenco.setValueAt(elencoGiocatore.get(i).getCodiceGiocatore(), i, 0); //Inserisce codice nella tabella
+            tabellaElenco.setValueAt(elencoGiocatore.get(i).getNomeGiocatore(), i, 1); //Inserisce nome nella tabella
+        }
+        elenco.setModel(tabellaElenco);                                         //Inserisce il modello con i dati nella tabella
+    }
+    
     //Metodi da implementare
     @Override
     public JTextField getCampoUser()

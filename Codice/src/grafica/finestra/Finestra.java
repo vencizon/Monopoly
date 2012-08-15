@@ -1,6 +1,8 @@
 package grafica.finestra;
 
+import entita.Giocatore;
 import java.awt.Container;
+import java.util.ArrayList;
 import javax.swing.*;
 
 //Classe astratta finestra
@@ -28,7 +30,10 @@ public abstract class Finestra extends JFrame
     public abstract JTextField getCampoPass();                                  //Metodo recupera campo password
     public abstract JTextField getCampoNomeGiocatore();                         //Metodo recupera campo nome giocatore nuovo
     public abstract JTextField getNomePartita();                                //Metodo recupera campo nome partita
-    public abstract JTextField getCampoGiorno();                                //Metodo recupera campo giorno nuova partita
-    public abstract JTextField getCampoMese();                                  //Metodo recupera campo mese nuova partita
-    public abstract JTextField getCampoAnno();                                  //Metodo recupera campo anno nuova partita
+    public abstract String getCampoGiorno();                                    //Metodo recupera campo giorno nuova partita
+    public abstract String getCampoMese();                                      //Metodo recupera campo mese nuova partita
+    public abstract String getCampoAnno();                                      //Metodo recupera campo anno nuova partita
+    public abstract ArrayList<Giocatore> getListaGiocatori();                   //Metodo recupera lista giocatori selezionati
+    public abstract JTable getTabellaPartecipanti();                            //Metodo recupera tabella elenco partecipanti
+    public abstract void setElencoGiocatoriScelti();                            //Metodo di creazione elenco scelti
 }

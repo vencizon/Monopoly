@@ -1,9 +1,9 @@
 package grafica.finestra;
 
-import grafica.Bottone;
-import grafica.ImpostazioniComponente;
-import grafica.finestra.Finestra;
+import entita.Giocatore;
+import grafica.*;
 import java.awt.*;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import logica.Controllore;
@@ -89,19 +89,36 @@ public class FinestraVisualizza extends Finestra
     }
 
     @Override
-    public JTextField getCampoGiorno()
+    public String getCampoGiorno()
     {
         return null;
     }
 
     @Override
-    public JTextField getCampoMese()
+    public String getCampoMese()
     {
         return null;
     }
 
     @Override
-    public JTextField getCampoAnno()
+    public String getCampoAnno()
+    {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Giocatore> getListaGiocatori()
+    {
+        return null;
+    }
+
+    @Override
+    public void setElencoGiocatoriScelti()
+    {
+    }
+
+    @Override
+    public JTable getTabellaPartecipanti()
     {
         return null;
     }
